@@ -22,16 +22,18 @@ public class Constants {
         public static final int DRIVE_MOTOR_RIGHT_LEADER_ID = 2;
         public static final int DRIVE_MOTOR_RIGHT_FOLLOWER_ID = 3;
 
-        public static final double ARCADE_DRIVE_TURN_MULT = -0.7;
+        public static final double ARCADE_DRIVE_TURN_MULT = 0.7;
         public static final double ARCADE_DRIVE_TURN_DEADBAND = 0.05;
 
-        public static final double DRIVE_GEARING = 9.6;
+        public static final double DRIVE_GEARING = 9.6; // rotations of the motor per rotations of the wheel
         public static final double WHEEL_RADIUS_METERS = 0.0762; // 3 inches
         public static final double TRACK_WIDTH_METERS = 0.59312;
-
         public static final DifferentialDriveKinematics DRIVE_KINEMATICS = new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
+
         public static final double ENCODER_DISTANCE_PER_MARK = WHEEL_RADIUS_METERS * 2 * Math.PI / ConversionConstants.FALCON_ENCODER_RESOLUTION;
-        public static final double DRIVE_DIST_PER_TICK = ENCODER_DISTANCE_PER_MARK / DRIVE_GEARING; // meters per encoder tick
+        public static final double DRIVE_NU_TO_METER = ENCODER_DISTANCE_PER_MARK / DRIVE_GEARING; // meters driven per encoder tick
+        public static final double DRIVE_NUp100MS_TO_MPS = DRIVE_NU_TO_METER * 10; // sensor units per 100 ms to m/s of drivetrain
+        public static final double MAX_DRIVE_VEL_NUp100MS = 6380 * ConversionConstants.FALCON_ENCODER_RESOLUTION / 60 / 10; // max angular velocity of drivetrain (encoder, not wheel) in sensor units per 100 ms - 6380 RPM * RESOLUTION nu/rot * 1 min/60s * 1s/(10*100ms)
 
         public static final double kS = 0.63899;
         public static final double kV = 2.1976;

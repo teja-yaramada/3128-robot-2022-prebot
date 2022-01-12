@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team3128.Constants;
+import frc.team3128.Constants.DriveConstants;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
 import frc.team3128.common.hardware.motor.NAR_TalonFX;
@@ -27,10 +27,10 @@ public class NAR_Drivetrain extends SubsystemBase {
     // Initialize the generic motors
     // TODO: Weird difference in speed for different motors
 
-    private NAR_EMotor leftLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
-    private NAR_EMotor rightLeader = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
-    private NAR_EMotor leftFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
-    private NAR_EMotor rightFollower = new NAR_TalonFX(Constants.DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    private NAR_TalonFX leftLeader = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    private NAR_TalonFX rightLeader = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    private NAR_TalonFX leftFollower = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    private NAR_TalonFX rightFollower = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
 
     // private NAR_EMotor leftLeader = new NAR_TalonSRX(0);
     // private NAR_EMotor rightLeader = new NAR_TalonSRX(1);
@@ -55,11 +55,13 @@ public class NAR_Drivetrain extends SubsystemBase {
 
     public NAR_Drivetrain(){
 
+        super();
+
         // TODO: Initialize motors here from parameters
 
         // Not sure what the deal is here
-        leftFollower.follow(leftLeader);
-        rightFollower.follow((rightLeader));
+        leftFollower.follow((NAR_EMotor)leftLeader);
+        rightFollower.follow((NAR_EMotor)rightLeader);
         
         leftLeader.setInverted(true);
         leftFollower.setInverted(true);
@@ -73,11 +75,11 @@ public class NAR_Drivetrain extends SubsystemBase {
         if(Robot.isSimulation()){
             robotDriveSim =
             new DifferentialDrivetrainSim(
-                Constants.DriveConstants.DRIVE_CHAR,
-                Constants.DriveConstants.GEARBOX,
-                Constants.DriveConstants.DRIVE_GEARING,
-                Constants.DriveConstants.TRACK_WIDTH_METERS,
-                Constants.DriveConstants.WHEEL_RADIUS_METERS, 
+                DriveConstants.DRIVE_CHAR,
+                DriveConstants.GEARBOX,
+                DriveConstants.DRIVE_GEARING,
+                DriveConstants.TRACK_WIDTH_METERS,
+                DriveConstants.WHEEL_RADIUS_METERS, 
                 null/*VecBuilder.fill(0, 0, 0.0001, 0.1, 0.1, 0.005, 0.005)*/);
         }
 
@@ -103,11 +105,16 @@ public class NAR_Drivetrain extends SubsystemBase {
         
         SmartDashboard.putNumber("Left Encoder (meters)", getLeftEncoderDistance());
         SmartDashboard.putNumber("Right Encoder (meters)", getRightEncoderDistance());
+        SmartDashboard.putNumber("Left Encoder Speed (m per s)", getLeftEncoderSpeed());
+        SmartDashboard.putNumber("Right Encoder (m per s)", getRightEncoderSpeed());
+        SmartDashboard.putString("getPose()", getPose().toString());
         SmartDashboard.putNumber("Gyro", getHeading());
     }
 
     public void simulationPeriodic() {
         
+        setVelocityMpS(3, 3);
+
         // Set motor voltage inputs
         robotDriveSim.setInputs(
             leftLeader.getMotorOutputVoltage(),
@@ -118,13 +125,10 @@ public class NAR_Drivetrain extends SubsystemBase {
         robotDriveSim.update(0.02);
 
         // Store simulated motor states
-        leftLeader.setQuadSimPosition(robotDriveSim.getLeftPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
-        leftLeader.setQuadSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/(Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
-        rightLeader.setQuadSimPosition(robotDriveSim.getRightPositionMeters() / Constants.DriveConstants.DRIVE_DIST_PER_TICK);
-        rightLeader.setQuadSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/(Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
-
-        SmartDashboard.putNumber("Left Speed", leftLeader.getSelectedSensorVelocity());
-        SmartDashboard.putNumber("Left Desired Speed", robotDriveSim.getLeftVelocityMetersPerSecond() / (Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10));
+        leftLeader.setQuadSimPosition(robotDriveSim.getLeftPositionMeters() / DriveConstants.DRIVE_NU_TO_METER);
+        leftLeader.setQuadSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/(DriveConstants.DRIVE_NU_TO_METER * 10));
+        rightLeader.setQuadSimPosition(robotDriveSim.getRightPositionMeters() / DriveConstants.DRIVE_NU_TO_METER);
+        rightLeader.setQuadSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/(DriveConstants.DRIVE_NU_TO_METER * 10));
         
         // TODO: Abstractify gyro
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -143,25 +147,25 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public double getLeftEncoderDistance() {
-        return leftLeader.getSelectedSensorPosition() * Constants.DriveConstants.DRIVE_DIST_PER_TICK;
+        return leftLeader.getSelectedSensorPosition() * DriveConstants.DRIVE_NU_TO_METER;
     }
 
     public double getRightEncoderDistance() {
-        return rightLeader.getSelectedSensorPosition() * Constants.DriveConstants.DRIVE_DIST_PER_TICK;
+        return rightLeader.getSelectedSensorPosition() * DriveConstants.DRIVE_NU_TO_METER;
     }
 
     /**
      * @return the left encoder velocity in meters per second
      */
     public double getLeftEncoderSpeed() {
-        return leftLeader.getSelectedSensorVelocity() * Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10;
+        return leftLeader.getSelectedSensorVelocity() * DriveConstants.DRIVE_NU_TO_METER * 10;
     }
 
     /**
      * @return the right encoder velocity in meters per second
      */
     public double getRightEncoderSpeed() {
-        return rightLeader.getSelectedSensorVelocity() * Constants.DriveConstants.DRIVE_DIST_PER_TICK * 10;
+        return rightLeader.getSelectedSensorVelocity() * DriveConstants.DRIVE_NU_TO_METER * 10;
     }
     
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
@@ -176,14 +180,41 @@ public class NAR_Drivetrain extends SubsystemBase {
         robotDrive.stopMotor();
     }
 
+    /**
+     * @param leftSpeed the left speed on [-1.0, 1.0]
+     * @param rightSpeed the right speed on [-1.0, 1.0]
+     */
     public void tankDrive(double leftSpeed, double rightSpeed) {
         robotDrive.tankDrive(leftSpeed, rightSpeed);
         robotDrive.feed();
     }
 
+    /**
+     * @param leftVolts the left voltage on [-12.0, 12.0]
+     * @param rightVolts the right voltage on [-12.0, 12.0]
+     */
     public void tankDriveVolts(double leftVolts, double rightVolts) {
-        robotDrive.tankDrive(leftVolts / RobotController.getBatteryVoltage(), rightVolts / RobotController.getBatteryVoltage());
-        robotDrive.feed();
+        tankDrive(leftVolts / RobotController.getBatteryVoltage(), rightVolts / RobotController.getBatteryVoltage());
+    }
+
+    /**
+     * @param leftVel Left side speed in native encoder units per 100ms
+     * @param rightVel right side speed in native encoder units per 100ms
+     */
+    public void setVelocity(double leftVel, double rightVel) {
+        // leftLeader.set(ControlMode.Velocity, leftVel);
+        // rightLeader.set(ControlMode.Velocity, rightVel);
+        // robotDrive.feed();
+
+        tankDrive(leftVel / DriveConstants.MAX_DRIVE_VEL_NUp100MS, rightVel / DriveConstants.MAX_DRIVE_VEL_NUp100MS);
+    }
+
+    /**
+     * @param leftVelMpS left side speed in meters per second
+     * @param rightVelMps right side speed in meters per second
+     */
+    public void setVelocityMpS(double leftVelMpS, double rightVelMps) {
+        setVelocity(leftVelMpS / DriveConstants.DRIVE_NUp100MS_TO_MPS, rightVelMps / DriveConstants.DRIVE_NUp100MS_TO_MPS);
     }
 
     public void resetEncoders() {

@@ -20,6 +20,10 @@ import frc.team3128.Constants;
  * 
  */
 public class Trajectories {
+
+    private static double xOffsetInches = 50;
+    private static double yOffsetInches = 50;
+
     private static final DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
             new SimpleMotorFeedforward(Constants.DriveConstants.kS, Constants.DriveConstants.kV, Constants.DriveConstants.kA),
             Constants.DriveConstants.DRIVE_KINEMATICS, Constants.DriveConstants.MAX_DRIVE_VOLTAGE);
@@ -37,18 +41,19 @@ public class Trajectories {
             .setReversed(true);
 
     public static Trajectory trajectorySimple = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(Units.inchesToMeters(0), Units.inchesToMeters(0), new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(0 + xOffsetInches), Units.inchesToMeters(0 + yOffsetInches), new Rotation2d(0)),
         List.of(
-        new Translation2d(Units.inchesToMeters(30), Units.inchesToMeters(20)),
-        new Translation2d(Units.inchesToMeters(60), Units.inchesToMeters(-20))                                                          
+        new Translation2d(Units.inchesToMeters(100 + xOffsetInches), Units.inchesToMeters(-25 + yOffsetInches))                                                                                                            
         ),
-        new Pose2d(Units.inchesToMeters(90), Units.inchesToMeters(0), new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(0 + xOffsetInches), Units.inchesToMeters(-50 + yOffsetInches), new Rotation2d(Math.PI)),
         forwardTrajConfig);
 
     public static Trajectory trajectoryLessSimple = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d(0)),
+        new Pose2d(Units.inchesToMeters(0 + xOffsetInches), Units.inchesToMeters(0 + yOffsetInches), new Rotation2d(0)),
         List.of(
-            new Translation2d(Units.inchesToMeters(6), Units.inchesToMeters(-14))),
-        new Pose2d(Units.inchesToMeters(50), Units.inchesToMeters(-15), new Rotation2d(0)),
+        new Translation2d(Units.inchesToMeters(30 + xOffsetInches), Units.inchesToMeters(20 + yOffsetInches)),
+        new Translation2d(Units.inchesToMeters(60 + xOffsetInches), Units.inchesToMeters(-20 + yOffsetInches))                                                          
+        ),
+        new Pose2d(Units.inchesToMeters(90 + xOffsetInches), Units.inchesToMeters(0 + yOffsetInches), new Rotation2d(0)),
         forwardTrajConfig);
 }

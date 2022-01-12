@@ -66,11 +66,19 @@ public class RobotContainer {
                                 m_drive::tankDriveVolts,
                                 m_drive)
                                 .andThen(() -> m_drive.stop(), m_drive);
+
+        // auto = new RamseteCommand(Trajectories.trajectorySimple, 
+        //                             m_drive::getPose,
+        //                             new RamseteController(Constants.DriveConstants.RAMSETE_B, Constants.DriveConstants.RAMSETE_ZETA),
+        //                             Constants.DriveConstants.DRIVE_KINEMATICS,
+        //                             m_drive::setVelocityMpS,
+        //                             m_drive)
+        //                             .andThen(() -> m_drive.stop(), m_drive);
     }
 
     private void dashboardInit() {
         if (DEBUG) {
-            SmartDashboard.putData("CommandScheduler", CommandScheduler.getInstance());
+            SmartDashboard.putData("CommandScheduler", m_commandScheduler);
             SmartDashboard.putData("Drivetrain", m_drive);
         }
             
