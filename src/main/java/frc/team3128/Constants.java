@@ -38,8 +38,8 @@ public class Constants {
         public static final double kS = 0.63899;
         public static final double kV = 2.1976;
         public static final double kA = 0.12023;
-        public static final double kVAngular = 1.5;       // Nathan's magic numbers of doom
-        public static final double kAAngular = 0.3;     // Nathan's magic numbers of doom
+        public static final double kVAngular = 1.5;       // magic numbers of doom
+        public static final double kAAngular = 0.3;       // magic numbers of doom
 
         public static final double MAX_DRIVE_VELOCITY = 4; // m/s - Real value ~5
         public static final double MAX_DRIVE_ACCELERATION = 2; // m/s^2 - I don't know what this number is

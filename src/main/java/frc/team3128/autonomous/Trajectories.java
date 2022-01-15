@@ -43,9 +43,10 @@ public class Trajectories {
     public static Trajectory trajectorySimple = TrajectoryGenerator.generateTrajectory(
         new Pose2d(Units.inchesToMeters(0 + xOffsetInches), Units.inchesToMeters(0 + yOffsetInches), new Rotation2d(0)),
         List.of(
-        new Translation2d(Units.inchesToMeters(100 + xOffsetInches), Units.inchesToMeters(-25 + yOffsetInches))                                                                                                            
+        new Translation2d(Units.inchesToMeters(50 + xOffsetInches), Units.inchesToMeters(0 + yOffsetInches)),  
+        new Translation2d(Units.inchesToMeters(70 + xOffsetInches), Units.inchesToMeters(-25 + yOffsetInches))                                                                                                       
         ),
-        new Pose2d(Units.inchesToMeters(0 + xOffsetInches), Units.inchesToMeters(-50 + yOffsetInches), new Rotation2d(Math.PI)),
+        new Pose2d(Units.inchesToMeters(50 + xOffsetInches), Units.inchesToMeters(-50 + yOffsetInches), new Rotation2d(-Math.PI)),
         forwardTrajConfig);
 
     public static Trajectory trajectoryLessSimple = TrajectoryGenerator.generateTrajectory(

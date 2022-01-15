@@ -1,6 +1,5 @@
 package frc.team3128.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.hal.SimDouble;
@@ -57,8 +56,6 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         super();
 
-        // TODO: Initialize motors here from parameters
-
         // Not sure what the deal is here
         leftFollower.follow((NAR_EMotor)leftLeader);
         rightFollower.follow((NAR_EMotor)rightLeader);
@@ -112,8 +109,6 @@ public class NAR_Drivetrain extends SubsystemBase {
     }
 
     public void simulationPeriodic() {
-        
-        setVelocityMpS(3, 3);
 
         // Set motor voltage inputs
         robotDriveSim.setInputs(
@@ -126,9 +121,9 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         // Store simulated motor states
         leftLeader.setQuadSimPosition(robotDriveSim.getLeftPositionMeters() / DriveConstants.DRIVE_NU_TO_METER);
-        leftLeader.setQuadSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond()/(DriveConstants.DRIVE_NU_TO_METER * 10));
+        leftLeader.setQuadSimVelocity(robotDriveSim.getLeftVelocityMetersPerSecond() / DriveConstants.DRIVE_NUp100MS_TO_MPS);
         rightLeader.setQuadSimPosition(robotDriveSim.getRightPositionMeters() / DriveConstants.DRIVE_NU_TO_METER);
-        rightLeader.setQuadSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond()/(DriveConstants.DRIVE_NU_TO_METER * 10));
+        rightLeader.setQuadSimVelocity(robotDriveSim.getRightVelocityMetersPerSecond() / DriveConstants.DRIVE_NUp100MS_TO_MPS);
         
         // TODO: Abstractify gyro
         int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
@@ -185,13 +180,13 @@ public class NAR_Drivetrain extends SubsystemBase {
      * @param rightSpeed the right speed on [-1.0, 1.0]
      */
     public void tankDrive(double leftSpeed, double rightSpeed) {
-        robotDrive.tankDrive(leftSpeed, rightSpeed);
-        robotDrive.feed();
+        robotDrive.tankDrive(leftSpeed, rightSpeed, false);
+        // robotDrive.feed();
     }
 
     /**
-     * @param leftVolts the left voltage on [-12.0, 12.0]
-     * @param rightVolts the right voltage on [-12.0, 12.0]
+     * @param leftVolts Left-side voltage on [-12.0, 12.0]
+     * @param rightVolts Right-side voltage on [-12.0, 12.0]
      */
     public void tankDriveVolts(double leftVolts, double rightVolts) {
         tankDrive(leftVolts / RobotController.getBatteryVoltage(), rightVolts / RobotController.getBatteryVoltage());
@@ -225,6 +220,14 @@ public class NAR_Drivetrain extends SubsystemBase {
     public void resetPose(Pose2d poseMeters) {
         resetEncoders();
         odometry.resetPosition(poseMeters, Rotation2d.fromDegrees(getHeading()));
+    }
+
+    /**
+     * Reset pose to (x = 0, y = 0, theta = 0)
+     */
+    public void resetPose() {
+        resetGyro();
+        resetPose(new Pose2d(0, 0, Rotation2d.fromDegrees(getHeading())));
     }
 
     public void resetGyro() {

@@ -10,6 +10,7 @@ import frc.team3128.common.NAR_EMotor;
 //import frc.team3128.common.NARMotor;
 //import frc.team3128.common.NARTalon;
 
+// Update to use 2022 TalonFX sim functionality
 public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;

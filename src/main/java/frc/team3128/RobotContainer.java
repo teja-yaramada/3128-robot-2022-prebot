@@ -3,11 +3,12 @@ package frc.team3128;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
 import frc.team3128.common.hardware.input.NAR_Joystick;
@@ -30,7 +31,7 @@ public class RobotContainer {
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
 
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
 
     public RobotContainer() {
 
@@ -46,10 +47,13 @@ public class RobotContainer {
         initAutos();
         configureButtonBindings();
         dashboardInit();
+        if (Robot.isSimulation())
+            DriverStation.silenceJoystickConnectionWarning(true); // silence joystick warnings in sim
     }   
 
     private void configureButtonBindings() {
-        
+        m_rightStick.getButton(1).whenPressed(new InstantCommand(m_drive::resetGyro));
+        m_rightStick.getButton(2).whenPressed(new InstantCommand(m_drive::resetPose));
     }
 
     private void initAutos() {

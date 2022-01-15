@@ -8,7 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
 
-public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
+public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor {
     private double prevValue = 0;
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonSRXSimCollection motorSim;
