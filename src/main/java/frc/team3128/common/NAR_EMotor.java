@@ -2,7 +2,7 @@ package frc.team3128.common;
 
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 
-// Daniel - establish convention for these methods and ensure that subclasses implement them
+// Daniel - ensure that subclasses implement the conventions used here
 public interface NAR_EMotor extends MotorController {
 
     /**
@@ -25,9 +25,6 @@ public interface NAR_EMotor extends MotorController {
      */
     public void setEncoderPosition(double encPos);
 
-    /**
-     * 
-     */
     public void setQuadSimPosition(double pos);
     public void setQuadSimVelocity(double vel);
 
