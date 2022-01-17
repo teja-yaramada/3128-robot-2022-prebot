@@ -50,7 +50,7 @@ public class NAR_Drivetrain extends SubsystemBase {
     private DifferentialDriveOdometry odometry;
 
     // TODO: Abstractify gyro
-    private static AHRS gyro = new AHRS(SPI.Port.kMXP);;
+    private static AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     private static Field2d field;
 

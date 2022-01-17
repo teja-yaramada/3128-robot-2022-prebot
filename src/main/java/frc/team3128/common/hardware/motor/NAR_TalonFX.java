@@ -16,8 +16,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	private ControlMode prevControlMode = ControlMode.Disabled;
 	private TalonFXSimCollection motorSim;
 
-	public static int simMotorID = 3128;
-
 	/**	 
 	 * @param deviceNumber device id
 	 */
