@@ -1,7 +1,7 @@
 package frc.team3128.common.hardware.motor;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax;
+// import com.revrobotics.RelativeEncoder;
+// import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.hal.SimDevice;
 import edu.wpi.first.hal.SimDevice.Direction;
@@ -11,10 +11,14 @@ import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
 import frc.team3128.Constants.ConversionConstants;
 
+import net.thefletcher.revrobotics.CANSparkMax;
+import net.thefletcher.revrobotics.SparkMaxRelativeEncoder;
+import net.thefletcher.revrobotics.enums.MotorType;
+
 public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	private double prevValue = 0;
-	private RelativeEncoder encoder;
+	private SparkMaxRelativeEncoder encoder;
 	private SimDevice encoderSim;
 	private SimDouble encoderPos;
 	private SimDouble encoderVel;
@@ -28,7 +32,7 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 		super(deviceNumber, type);
 
 		if(Robot.isReal()){
-			encoder = getEncoder();
+			encoder = (SparkMaxRelativeEncoder)getEncoder();
 			encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks - TEST
 		}else{
 			encoderSim = SimDevice.create("CANEncoder", deviceNumber);
@@ -82,12 +86,12 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	}
 
 	@Override
-	public void setQuadSimPosition(double pos) {
+	public void setSimPosition(double pos) {
 		encoderPos.set(pos);
 	}
 
 	@Override
-	public void setQuadSimVelocity(double vel) {
+	public void setSimVelocity(double vel) {
 		encoderVel.set(vel);
 	}
 
@@ -97,10 +101,5 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 			throw new RuntimeException("bad follow");
 		}
 		super.follow((CANSparkMax)motor);
-	}
-
-	@Override
-	public NAR_EMotor getMotor() {
-		return this;
 	}
 }
