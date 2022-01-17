@@ -2,6 +2,8 @@ package frc.team3128.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import net.thefletcher.revrobotics.enums.*;
+
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.wpilibj.RobotController;
@@ -19,27 +21,27 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team3128.Constants.DriveConstants;
 import frc.team3128.Robot;
 import frc.team3128.common.NAR_EMotor;
-import frc.team3128.common.hardware.motor.NAR_TalonFX;
+import frc.team3128.common.hardware.motor.*;
 
 public class NAR_Drivetrain extends SubsystemBase {
 
     // Initialize the generic motors
     // TODO: Weird difference in speed for different motors
 
-    private NAR_EMotor leftLeader = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
-    private NAR_EMotor rightLeader = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
-    private NAR_EMotor leftFollower = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
-    private NAR_EMotor rightFollower = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
+    // private NAR_EMotor leftLeader = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID);
+    // private NAR_EMotor rightLeader = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID);
+    // private NAR_EMotor leftFollower = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID);
+    // private NAR_EMotor rightFollower = new NAR_TalonFX(DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID);
 
     // private NAR_EMotor leftLeader = new NAR_TalonSRX(0);
     // private NAR_EMotor rightLeader = new NAR_TalonSRX(1);
     // private NAR_EMotor leftFollower = new NAR_TalonSRX(2);
     // private NAR_EMotor rightFollower = new NAR_TalonSRX(3);
     
-    // private NAR_EMotor leftLeader = new NAR_CANSparkMax(0, MotorType.kBrushed);
-    // private NAR_EMotor rightLeader = new NAR_CANSparkMax(1, MotorType.kBrushed);
-    // private NAR_EMotor leftFollower = new NAR_CANSparkMax(2, MotorType.kBrushed);
-    // private NAR_EMotor rightFollower = new NAR_CANSparkMax(3, MotorType.kBrushed);
+    private NAR_EMotor leftLeader = new NAR_CANSparkMax(DriveConstants.DRIVE_MOTOR_LEFT_LEADER_ID, MotorType.kBrushless);
+    private NAR_EMotor rightLeader = new NAR_CANSparkMax(DriveConstants.DRIVE_MOTOR_RIGHT_LEADER_ID, MotorType.kBrushless);
+    private NAR_EMotor leftFollower = new NAR_CANSparkMax(DriveConstants.DRIVE_MOTOR_LEFT_FOLLOWER_ID, MotorType.kBrushless);
+    private NAR_EMotor rightFollower = new NAR_CANSparkMax(DriveConstants.DRIVE_MOTOR_RIGHT_FOLLOWER_ID, MotorType.kBrushless);
 
     public static NAR_Drivetrain instance;
 
@@ -56,9 +58,8 @@ public class NAR_Drivetrain extends SubsystemBase {
 
         super();
 
-        // Not sure what the deal is here
-        leftFollower.follow((NAR_EMotor)leftLeader);
-        rightFollower.follow((NAR_EMotor)rightLeader);
+        leftFollower.follow(leftLeader);
+        rightFollower.follow(rightLeader);
         
         leftLeader.setInverted(true);
         leftFollower.setInverted(true);
