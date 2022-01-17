@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team3128.autonomous.Trajectories;
 import frc.team3128.commands.ArcadeDrive;
+import frc.team3128.commands.RunIntake;
 import frc.team3128.common.hardware.input.NAR_Joystick;
+import frc.team3128.subsystems.Intake;
 import frc.team3128.subsystems.NAR_Drivetrain;
 
 /**
@@ -27,6 +30,7 @@ public class RobotContainer {
 
     private NAR_Joystick m_leftStick;
     private NAR_Joystick m_rightStick;
+    private Intake m_intake;
 
     private CommandScheduler m_commandScheduler = CommandScheduler.getInstance();
     private Command auto;
@@ -54,6 +58,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
         m_rightStick.getButton(1).whenPressed(new InstantCommand(m_drive::resetGyro));
         m_rightStick.getButton(2).whenPressed(new InstantCommand(m_drive::resetPose));
+        m_rightStick.getButton(8).whenActive(new RunIntake(m_intake));
+        m_rightStick.getButton(8).whenReleased(new RunCommand(m_intake::stopIntake, m_intake));
+
+    
     }
 
     private void initAutos() {
