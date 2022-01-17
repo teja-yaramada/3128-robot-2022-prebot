@@ -3,8 +3,7 @@ package frc.team3128.common.hardware.motor;
 // import com.revrobotics.RelativeEncoder;
 // import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.hal.SimDevice;
-import edu.wpi.first.hal.SimDevice.Direction;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
 import edu.wpi.first.hal.SimDouble;
 
 import frc.team3128.Robot;
@@ -19,7 +18,7 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 
 	private double prevValue = 0;
 	private SparkMaxRelativeEncoder encoder;
-	private SimDevice encoderSim;
+	private SimDeviceSim encoderSim;
 	private SimDouble encoderPos;
 	private SimDouble encoderVel;
 
@@ -31,13 +30,13 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	public NAR_CANSparkMax(int deviceNumber, MotorType type) {
 		super(deviceNumber, type);
 
-		if(Robot.isReal()){
-			encoder = (SparkMaxRelativeEncoder)getEncoder();
-			encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks - TEST
-		}else{
-			encoderSim = SimDevice.create("CANEncoder", deviceNumber);
-			encoderPos = encoderSim.createDouble("Pos", Direction.kBidir, 0);
-			encoderVel = encoderSim.createDouble("Vel", Direction.kBidir, 0);
+		encoder = (SparkMaxRelativeEncoder)getEncoder();
+		encoder.setPositionConversionFactor(ConversionConstants.SPARK_ENCODER_RESOLUTION); // convert rotations to encoder ticks - TEST
+
+		if(Robot.isSimulation()){
+			encoderSim = new SimDeviceSim("CANSparkMax[" + this.getDeviceId() + "] - RelativeEncoder");
+			encoderPos = encoderSim.getDouble("Position");
+			encoderVel = encoderSim.getDouble("Velocity");
 		}
 
 		// enableVoltageCompensation(true);
@@ -57,6 +56,11 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	}
 
 	@Override
+	public double getMotorOutputVoltage() {
+		return getAppliedOutput();
+	}
+
+	@Override
 	public double getSelectedSensorPosition() {
 		if(encoderSim != null)
 			return encoderPos.get();	
@@ -73,16 +77,11 @@ public class NAR_CANSparkMax extends CANSparkMax implements NAR_EMotor {
 	}
 
 	@Override
-	public double getMotorOutputVoltage() {
-		return getAppliedOutput();
-	}
-
-	@Override
-	public void setEncoderPosition(double encPos) {
+	public void setEncoderPosition(double pos) {
 		if(encoderSim != null)
-			encoderPos.set(encPos);	
+			encoderPos.set(pos);	
 		else
-			encoder.setPosition(encPos);
+			encoder.setPosition(pos);
 	}
 
 	@Override

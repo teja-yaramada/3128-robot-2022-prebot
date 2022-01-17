@@ -39,7 +39,6 @@ public class NAR_TalonSRX extends WPI_TalonSRX implements NAR_EMotor{
 		return prevValue;
 	}
 
-
 	@Override
 	public void setEncoderPosition(double n) {
 		setSelectedSensorPosition(n);

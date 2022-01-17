@@ -36,10 +36,6 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 			super.set(controlMode, outputValue);
 			prevValue = outputValue;
 		}
-		// if (outputValue != prevValue || controlMode != prevControlMode) {
-		// 	super.set(controlMode, outputValue);
-		// 	prevValue = outputValue;
-		// }
 	}
 	
 	public double getSetpoint() {
@@ -47,23 +43,8 @@ public class NAR_TalonFX extends WPI_TalonFX implements NAR_EMotor {
 	}
 
 	@Override
-	public double getSelectedSensorPosition() {
-		return super.getSelectedSensorPosition();
-	}
-
-	@Override
-	public double getSelectedSensorVelocity() {
-		return super.getSelectedSensorVelocity();
-	}
-
-	@Override
-	public double getMotorOutputVoltage(){
-		return super.getMotorOutputVoltage();
-	}
-
-	@Override
 	public void setEncoderPosition(double n) {
-			super.setSelectedSensorPosition(n);
+		super.setSelectedSensorPosition(n);
 	}
 
 	@Override
